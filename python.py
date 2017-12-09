@@ -28,8 +28,8 @@ def main():
         bar_chart = pygal.StackedBar(x_label_rotation=90)
         bar_chart.title = "All types of cars by month"
         bar_chart.x_labels = all_months()
-        for i in np(total_by_month[:-1]):
-            bar_chart.add(i[0], i[1:])
+        tmp = np(total_by_month)[0]
+        bar_chart.add(tmp[0], tmp[1:])
         bar_chart.render_to_file('all_month.svg')
     create_all_month()
 
