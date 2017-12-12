@@ -22,9 +22,11 @@ def main():
     all_by_month = df.loc["ALFA ROMEO":"YAMAHA", all_months()]
     hybrid_by_month = total_by_month.loc[total_by_month["TYPE"].isin(hybrid_types)]
     brand_hybrid_by_month = df.loc[df["TYPE"].isin(hybrid_types), ["TYPE"]+all_months()]
-    sum_brand_hybrid = [(i, j[0], sum(j[1:])) for i, j in zip(brand_hybrid_by_month.index.values,np(brand_hybrid_by_month)) if i != "TOTAL"]
+    sum_brand_hybrid = [(i, j[0], sum(j[1:])) for i, j in \
+    zip(brand_hybrid_by_month.index.values,np(brand_hybrid_by_month)) if i != "TOTAL"]
 
     def create_brand_hybrid_sum():
+        """create graph"""
         bar_chart = pygal.Bar(x_label_rotation=90)
         bar_chart.title = "ผลรวมของรถยนต์ไฮบริดแต่ละรุ่น"
         for i, j, k in sum_brand_hybrid:
@@ -33,6 +35,7 @@ def main():
     create_brand_hybrid_sum()
 
     def create_all_month():
+        """create graph"""
         bar_chart = pygal.Bar(x_label_rotation=90)
         bar_chart.title = "ผลรวมของรถยนต์แต่ละเดือน"
         bar_chart.x_labels = all_months()
@@ -42,6 +45,7 @@ def main():
     create_all_month()
 
     def create_all_sum():
+        """create graph"""
         bar_chart = pygal.Bar(x_label_rotation=90)
         bar_chart.title = "ผลรวมของรถยนต์แต่ละยี่ห้อ"
         for i, j in zip(all_by_month.index.values, np(all_by_month)):
@@ -50,6 +54,7 @@ def main():
     create_all_sum()
 
     def create_hybrid_month():
+        """create graph"""
         bar_chart = pygal.StackedBar(x_label_rotation=90)
         bar_chart.title = "ผลรวมของรถยนต์ไฮบริดแต่ละประเภทของแต่ละเดือน"
         bar_chart.x_labels = all_months()
@@ -59,6 +64,7 @@ def main():
     create_hybrid_month()
 
     def create_hybrid_sum():
+        """create graph"""
         bar_chart = pygal.Bar(x_label_rotation=90)
         bar_chart.title = "ผลรวมรถยนต์ไฮบริดแต่ละประเภท"
         for i in np(hybrid_by_month):
@@ -67,6 +73,7 @@ def main():
     create_hybrid_sum()
 
     def create_hybrid_per_total_percent_month():
+        """create graph"""
         tmp = []
         for i, j in list(zip(np(total_by_month)[-1], np(total_by_month)[0]))[1:-3]:
             tmp.append((i/j)*100//0.01/100)
@@ -78,6 +85,7 @@ def main():
     create_hybrid_per_total_percent_month()
 
     def create_hybrid_change_percent():
+        """create graph"""
         tmp = [0]
         for i in range(2, len(np(total_by_month)[-1][:-3])):
             tmp.append(np(total_by_month)[-1][i]-np(total_by_month)[-1][i-1])
@@ -88,23 +96,4 @@ def main():
         line_chart.render_to_file('Change_hybrid_prevmonth.svg')
     create_hybrid_change_percent()
 
-
-
-    print(all_by_month.index.values)
-    print(np(all_by_month))
-
-    print(np(hybrid_by_month))
-
-    print(np(total_by_month)[0])
-    print(np(total_by_month)[-1])
-    tmp1 = list(zip(np(total_by_month)[0], np(total_by_month)[-1]))
-    print(tmp1)
-    tmp2 = []
-    for i, j in tmp1[1:-3]:
-        tmp2.append((j/i)*100//0.01/100)
-    print(tmp2)
-
-    
-    
-    
 main()
