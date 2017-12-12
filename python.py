@@ -21,41 +21,49 @@ def main():
     total_by_year = df.loc["TOTAL", ["TYPE"]+[str(i)+"-YTD" for i in range(2012, 2018)]]
     all_by_month = df.loc["ALFA ROMEO":"YAMAHA", all_months()]
     hybrid_by_month = total_by_month.loc[total_by_month["TYPE"].isin(hybrid_types)]
-    bar_chart = pygal.HorizontalStackedBar()
-    bar_chart.x_labels = all_months()
+    brand_hybrid_by_month = df.loc[df["TYPE"].isin(hybrid_types), ["TYPE"]+all_months()]
+    sum_brand_hybrid = [(i, j[0], sum(j[1:])) for i, j in zip(brand_hybrid_by_month.index.values,np(brand_hybrid_by_month)) if i != "TOTAL"]
+
+    def create_brand_hybrid_sum():
+        bar_chart = pygal.Bar(x_label_rotation=90)
+        bar_chart.title = "ผลรวมของรถยนต์ไฮบริดแต่ละรุ่น"
+        for i, j, k in sum_brand_hybrid:
+            bar_chart.add(i+" "+j, k)
+        bar_chart.render_to_file('All_brands_of_hybrids.svg')
+    create_brand_hybrid_sum()
 
     def create_all_month():
-        bar_chart = pygal.StackedBar(x_label_rotation=90)
-        bar_chart.title = "All types of cars by month"
+        bar_chart = pygal.Bar(x_label_rotation=90)
+        bar_chart.title = "ผลรวมของรถยนต์แต่ละเดือน"
         bar_chart.x_labels = all_months()
         tmp = np(total_by_month)[0]
         bar_chart.add(tmp[0], tmp[1:])
-        bar_chart.render_to_file('all_month.svg')
+        bar_chart.render_to_file('All_cars_each_month.svg')
     create_all_month()
 
     def create_all_sum():
         bar_chart = pygal.Bar(x_label_rotation=90)
-        bar_chart.title = "All types of cars in sum"
+        bar_chart.title = "ผลรวมของรถยนต์แต่ละยี่ห้อ"
         for i, j in zip(all_by_month.index.values, np(all_by_month)):
             bar_chart.add(i, sum(j))
-        bar_chart.render_to_file('all_sum.svg')
+        bar_chart.render_to_file('All_cars_each_brand.svg')
     create_all_sum()
 
     def create_hybrid_month():
         bar_chart = pygal.StackedBar(x_label_rotation=90)
-        bar_chart.title = "Hybrid types of cars by month"
+        bar_chart.title = "ผลรวมของรถยนต์ไฮบริดแต่ละประเภทของแต่ละเดือน"
         bar_chart.x_labels = all_months()
         for i in np(hybrid_by_month):
             bar_chart.add(i[0], i[1:])
-        bar_chart.render_to_file('hybrid_month.svg')
+        bar_chart.render_to_file('All_hybrid_each_month.svg')
     create_hybrid_month()
 
     def create_hybrid_sum():
         bar_chart = pygal.Bar(x_label_rotation=90)
-        bar_chart.title = "Hybrid types of cars in sum"
+        bar_chart.title = "ผลรวมรถยนต์ไฮบริดแต่ละประเภท"
         for i in np(hybrid_by_month):
             bar_chart.add(i[0], sum(i[1:]))
-        bar_chart.render_to_file('hybrid_sum.svg')
+        bar_chart.render_to_file('All_hybrid_each_type.svg')
     create_hybrid_sum()
 
     def create_hybrid_per_total_percent_month():
@@ -63,10 +71,10 @@ def main():
         for i, j in list(zip(np(total_by_month)[-1], np(total_by_month)[0]))[1:-3]:
             tmp.append((i/j)*100//0.01/100)
         line_chart = pygal.Line(x_label_rotation=90)
-        line_chart.title = "Hybrid per total in percent"
+        line_chart.title = "เปอเซ็นของรถยนต์ไฮบริดในแต่ละเดือนเทียบกับรถยนต์ทุกประเภท"
         line_chart.x_labels = all_months()
         line_chart.add("hybrid", tmp)
-        line_chart.render_to_file('hybrid_per_total_percent_month.svg')
+        line_chart.render_to_file('All_hybrid_percent_month.svg')
     create_hybrid_per_total_percent_month()
 
     def create_hybrid_change_percent():
@@ -74,11 +82,10 @@ def main():
         for i in range(2, len(np(total_by_month)[-1][:-3])):
             tmp.append(np(total_by_month)[-1][i]-np(total_by_month)[-1][i-1])
         line_chart = pygal.Line(x_label_rotation=90)
-        line_chart.title = "Hybrid change form previous month"
+        line_chart.title = "อัตราการเปล่ยนแปลงของรถยนต์ไฮบริดจากเดือนก่อนหน้า"
         line_chart.x_labels = all_months()
         line_chart.add("change from previous month", tmp)
-        line_chart.render_to_file('hybrid_change_percent.svg')
-        print(tmp)
+        line_chart.render_to_file('Change_hybrid_prevmonth.svg')
     create_hybrid_change_percent()
 
 
